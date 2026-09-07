@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل التأمين الطبي الخاص</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-950:#0a2e2c;
+    --teal-800:#0f4c48;
+    --teal-700:#146b62;
+    --sage-400:#7fa99b;
+    --sage-200:#cfe0d8;
+    --paper:#f4f7f6;
+    --paper-line:#e2ebe8;
+    --ink:#12211f;
+    --ink-soft:#4c635f;
+    --gold-600:#b8842e;
+    --gold-500:#cf9a3d;
+    --gold-100:#f6e9d2;
+    --danger:#b3432f;
+    --white:#ffffff;
+    --radius:14px;
+    --shadow:0 6px 24px rgba(10,46,44,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans Arabic','Tajawal',sans-serif;
+    min-height:100vh;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{
+    font-family:'Tajawal','IBM Plex Sans Arabic',sans-serif;
+    font-weight:900;
+    color:var(--teal-950);
+    margin:0;
+  }
+  .app{max-width:960px;margin:0 auto;padding:28px 20px 80px;}
+
+  .hero{
+    background:linear-gradient(135deg,var(--teal-950) 0%,var(--teal-800) 60%,var(--teal-700) 100%);
+    border-radius:20px;
+    padding:34px 30px;
+    color:var(--white);
+    position:relative;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset-inline-end:-60px;
+    top:-60px;
+    width:220px;height:220px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(207,154,61,0.35), transparent 70%);
+  }
+  .hero .eyebrow{
+    font-size:12.5px;
+    letter-spacing:.06em;
+    color:var(--gold-100);
+    background:rgba(255,255,255,0.08);
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+    font-weight:600;
+  }
+  .hero h1{font-size:26px;color:var(--white);}
+  .hero p{margin:10px 0 0;color:var(--sage-200);font-size:14.5px;max-width:560px;}
+  .sync-pill{
+    display:inline-flex;align-items:center;gap:7px;
+    margin-top:16px;font-size:12px;font-weight:700;
+    background:rgba(255,255,255,0.1);padding:6px 12px;border-radius:999px;
+  }
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:#9be3b0;flex:none;}
+  .sync-dot.bad{background:#e08e6e;}
+  .sync-dot.pending{background:var(--gold-100);}
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--paper-line);
+    border-radius:var(--radius);
+    padding:22px;
+    margin-top:20px;
+    box-shadow:var(--shadow);
+  }
+  .card h2{
+    font-size:17px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .card h2 .num{
+    width:26px;height:26px;border-radius:8px;
+    background:var(--teal-800);color:#fff;
+    font-size:13px;display:flex;align-items:center;justify-content:center;
+    font-weight:700;flex:none;
+  }
+  .card .hint{color:var(--ink-soft);font-size:13px;margin:6px 0 16px;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;}
+  input[type=text],input[type=date],input[type=tel],select{
+    width:100%;
+    padding:11px 13px;
+    border:1.5px solid var(--paper-line);
+    border-radius:10px;
+    font-family:inherit;
+    font-size:14px;
+    background:var(--white);
+    color:var(--ink);
+    transition:.15s;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--teal-700);box-shadow:0 0 0 3px rgba(20,107,98,0.12);}
+  input:disabled,select:disabled{background:#eef2f1;color:var(--ink-soft);cursor:not-allowed;}
+  label{font-size:12.5px;font-weight:700;color:var(--teal-950);display:block;margin-bottom:6px;}
+  button{
+    font-family:inherit;cursor:pointer;border:none;border-radius:10px;
+    font-weight:700;font-size:14px;transition:.15s;
+  }
+  .btn-primary{background:var(--teal-800);color:#fff;padding:11px 20px;}
+  .btn-primary:hover{background:var(--teal-950);}
+  .btn-primary:disabled{background:#a9bab7;cursor:not-allowed;}
+  .btn-gold{background:var(--gold-500);color:var(--teal-950);padding:11px 20px;}
+  .btn-gold:hover{background:var(--gold-600);color:#fff;}
+  .btn-gold:disabled{background:#d8cdb3;color:#8a8578;cursor:not-allowed;}
+  .btn-ghost{background:transparent;color:var(--teal-800);padding:9px 16px;border:1.5px solid var(--sage-400);}
+  .btn-ghost:hover{background:var(--sage-200);}
+  .search-row{display:flex;gap:10px;}
+  .search-row input{flex:1;}
+  .error-msg{color:var(--danger);font-size:13px;margin-top:8px;font-weight:600;display:none;}
+  .error-msg.show{display:block;}
+  .field-err{color:var(--danger);font-size:11.5px;margin-top:4px;display:none;}
+  .field-err.show{display:block;}
+
+  .id-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--teal-950);color:var(--gold-100);
+    padding:6px 14px;border-radius:999px;
+    font-size:12.5px;letter-spacing:.03em;font-weight:700;
+  }
+
+  .person-block{
+    border:1px solid var(--paper-line);
+    border-radius:12px;
+    padding:18px;
+    margin-top:14px;
+    background:var(--paper);
+    position:relative;
+  }
+  .person-block.employee{
+    background:linear-gradient(120deg,var(--teal-950),var(--teal-800));
+    color:#fff;
+  }
+  .person-block.employee label{color:var(--sage-200);}
+  .person-block.employee input,.person-block.employee select{
+    background:rgba(255,255,255,0.92);
+  }
+  .person-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;margin-bottom:14px;flex-wrap:wrap;
+  }
+  .person-head .rel-tag{
+    font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;
+    background:var(--sage-200);color:var(--teal-800);
+  }
+  .field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .field-grid .full{grid-column:1/-1;}
+
+  .photo-row{display:flex;align-items:center;gap:12px;}
+  .photo-thumb{
+    width:52px;height:52px;border-radius:10px;object-fit:cover;
+    border:1.5px solid var(--paper-line);background:#fff;flex:none;
+  }
+  .photo-thumb.placeholder{
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-soft);font-size:11px;text-align:center;
+  }
+  .photo-input-label{
+    font-size:12.5px;font-weight:700;color:var(--teal-800);
+    background:var(--sage-200);padding:8px 12px;border-radius:8px;cursor:pointer;
+  }
+  .person-block.employee .photo-input-label{background:rgba(255,255,255,0.15);color:#fff;}
+  .photo-input-label input{display:none;}
+  .photo-saved-tag{font-size:11px;color:var(--teal-700);font-weight:700;}
+  .person-block.employee .photo-saved-tag{color:var(--sage-200);}
+
+  .health-box{
+    border:1.5px solid var(--paper-line);
+    border-radius:10px;
+    padding:12px 14px;
+    background:rgba(255,255,255,0.6);
+  }
+  .person-block.employee .health-box{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.25);}
+  .check-row{display:flex;align-items:center;gap:9px;}
+  .check-row + .check-row{margin-top:10px;}
+  .check-row input[type=checkbox]{
+    width:18px;height:18px;accent-color:var(--teal-700);flex:none;cursor:pointer;
+  }
+  .check-row label{margin:0;font-size:13.5px;font-weight:600;cursor:pointer;}
+  .health-details{margin-top:10px;display:none;}
+  .health-details.show{display:block;}
+  .health-details textarea{
+    width:100%;min-height:60px;resize:vertical;
+    padding:10px 12px;border:1.5px solid var(--paper-line);border-radius:10px;
+    font-family:inherit;font-size:13.5px;background:var(--white);color:var(--ink);
+  }
+  .person-block.employee .health-details textarea{background:rgba(255,255,255,0.92);}
+
+  .actions-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center;}
+
+  .toast{
+    position:fixed;bottom:24px;right:50%;transform:translateX(50%);
+    background:var(--teal-950);color:#fff;padding:12px 22px;border-radius:999px;
+    font-size:13.5px;font-weight:600;box-shadow:var(--shadow);
+    opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center;
+  }
+  .toast.show{opacity:1;bottom:32px;}
+  .toast.error{background:var(--danger);}
+
+  .footer-note{text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:26px;}
+  .empty-note{color:var(--ink-soft);font-size:13.5px;padding:10px 4px;}
+  .spinner{
+    display:inline-block;width:14px;height:14px;border-radius:50%;
+    border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;
+    animation:spin .7s linear infinite;vertical-align:middle;margin-inline-end:6px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  @media(max-width:600px){
+    .two-col{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="hero">
+    <span class="eyebrow">التأمين الطبي الخاص · متصل مباشرة بجوجل شيت</span>
+    <h1>بوابة تسجيل التأمين الطبي</h1>
+    <p>اختر شركتك ثم أدخل كودك لعرض بياناتك وبيانات أفراد أسرتك، مع إمكانية تعديل البيانات وإضافة صورة لكل فرد. أي تعديل بيتحفظ مباشرة في الشيت والصور بتتخزن في جوجل درايف.</p>
+    <div class="sync-pill" id="syncPill"><span class="sync-dot pending" id="syncDot"></span><span id="syncText">جاري الاتصال بمصدر البيانات...</span></div>
+  </div>
+
+  <!-- Company + Code -->
+  <div class="card" id="pickCard">
+    <h2><span class="num">١</span> الدخول ببيانات التأمين</h2>
+    <p class="hint">اختر الشركة التابع لها أولًا، ثم اكتب كودك الوظيفي واضغط "بحث".</p>
+    <div class="two-col">
+      <div>
+        <label>الشركة</label>
+        <select id="companySelect" disabled><option value="">جاري التحميل...</option></select>
+      </div>
+      <div>
+        <label>كود الموظف</label>
+        <div class="search-row">
+          <input type="text" id="codeInput" placeholder="ادخل كودك" disabled inputmode="numeric">
+          <button class="btn-primary" id="searchBtn" disabled>بحث</button>
+        </div>
+      </div>
+    </div>
+    <div class="error-msg" id="pickError"></div>
+  </div>
+
+  <!-- Profile -->
+  <div id="profileArea"></div>
+
+  <div class="footer-note">التعديلات وإضافة الأفراد بتتحفظ مباشرة على جوجل شيت والصور على جوجل درايف فور الضغط على "حفظ".</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ================================================================
+// ضع رابط الـ Web App اللي حصلت عليه من Google Apps Script هنا:
+const CONFIG = {
+  API_URL: "https://script.google.com/macros/s/AKfycbxW9s427gF8fyNuPAp6c0Ocres5UUjMaYxgnmPoCm4U58HqXhMfD-O5ckjzNNz1FP0M/exec"
+};
+// ================================================================
+
+// ================= State =================
+let rawRows = [];
+let currentCompany = null;
+let currentEmployee = null;
+let dataReady = false;
+
+// ================= Helpers =================
+function toast(msg, isError){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', !!isError);
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function setSync(state, text){
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot' + (state==='bad' ? ' bad' : state==='pending' ? ' pending' : '');
+  document.getElementById('syncText').textContent = text;
+}
+
+// ================= Load data from Google Sheet =================
+async function loadData(){
+  if(CONFIG.API_URL.indexOf('PASTE_YOUR') === 0){
+    setSync('bad', 'لم يتم ربط الصفحة بجوجل شيت بعد — راجع تعليمات التركيب');
+    document.getElementById('pickError').textContent = 'الرجاء استكمال خطوات ربط الصفحة بجوجل شيت أولًا (ضع رابط Web App في أعلى الكود).';
+    document.getElementById('pickError').classList.add('show');
+    return;
+  }
+  try{
+    setSync('pending', 'جاري تحميل البيانات من جوجل شيت...');
+    const res = await fetch(CONFIG.API_URL, {method:'GET'});
+    const data = await res.json();
+    if(data.error) throw new Error(data.error);
+    rawRows = data.rows.map(r => ({...r, photo:null}));
+    dataReady = true;
+    setSync('ok', 'متصل — البيانات محدثة من جوجل شيت');
+    populateCompanies();
+    document.getElementById('companySelect').disabled = false;
+  }catch(err){
+    setSync('bad', 'تعذّر الاتصال بجوجل شيت: ' + err.message);
+    toast('تعذّر تحميل البيانات، تأكد من رابط الـ API ونشر الـ Web App', true);
+  }
+}
+
+// ================= Company / Code selection =================
+function populateCompanies(){
+  const companies = [...new Set(rawRows.filter(r=>!r.isDependent).map(r=>r.company).filter(Boolean))].sort();
+  const sel = document.getElementById('companySelect');
+  sel.innerHTML = '<option value="">اختر الشركة</option>' +
+    companies.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+}
+
+document.getElementById('companySelect').addEventListener('change', (e)=>{
+  currentCompany = e.target.value;
+  const codeInput = document.getElementById('codeInput');
+  const searchBtn = document.getElementById('searchBtn');
+  document.getElementById('profileArea').innerHTML = '';
+  document.getElementById('pickError').classList.remove('show');
+  codeInput.value = '';
+  if(!currentCompany){
+    codeInput.disabled = true;
+    searchBtn.disabled = true;
+    return;
+  }
+  codeInput.disabled = false;
+  searchBtn.disabled = false;
+  codeInput.focus();
+});
+
+function searchEmployee(){
+  const pickError = document.getElementById('pickError');
+  pickError.classList.remove('show');
+  const code = document.getElementById('codeInput').value.trim();
+  if(!currentCompany){
+    pickError.textContent = 'برجاء اختيار الشركة أولًا';
+    pickError.classList.add('show');
+    return;
+  }
+  if(!code){
+    pickError.textContent = 'برجاء إدخال كود الموظف';
+    pickError.classList.add('show');
+    return;
+  }
+  const emp = rawRows.find(r => !r.isDependent && r.company === currentCompany && r.codeStr === code);
+  if(!emp){
+    pickError.textContent = 'لا يوجد موظف بهذا الكود داخل الشركة المختارة، برجاء التأكد من الكود';
+    pickError.classList.add('show');
+    document.getElementById('profileArea').innerHTML = '';
+    return;
+  }
+  currentEmployee = emp;
+  renderProfile();
+  toast('تم تحميل بيانات الموظف');
+}
+document.getElementById('searchBtn').addEventListener('click', searchEmployee);
+document.getElementById('codeInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') searchEmployee();
+});
+
+// ================= Profile rendering =================
+const PLAN_OPTIONS = ['1','2','3'];
+const CAT_OPTIONS = ['A','A+','B'];
+const REL_OPTIONS = ['الزوج','الزوجة','الأبناء'];
+
+function photoThumbHtml(person, elId){
+  if(person.photo && person.photo.dataUrl){
+    return `<img class="photo-thumb" id="${elId}" src="${person.photo.dataUrl}" alt="صورة">`;
+  }
+  if(person.photoUrl){
+    return `<img class="photo-thumb" id="${elId}" src="${person.photoUrl}" alt="صورة">`;
+  }
+  return `<div class="photo-thumb placeholder" id="${elId}">لا توجد صورة</div>`;
+}
+
+function renderProfile(){
+  const deps = rawRows.filter(r => r.isDependent && r.company === currentCompany && r.parentCode === currentEmployee.codeStr)
+    .sort((a,b)=>{
+      const na = parseInt(a.codeStr.split('-')[1]) || 0;
+      const nb = parseInt(b.codeStr.split('-')[1]) || 0;
+      return na - nb;
+    });
+
+  const depsHtml = deps.length ? deps.map((d, idx) => personBlockHtml(d, 'dep'+idx, false)).join('')
+    : `<div class="empty-note">لا يوجد أفراد أسرة مسجلين لهذا الموظف حتى الآن.</div>`;
+
+  document.getElementById('profileArea').innerHTML = `
+    <div class="card">
+      <h2><span class="num">٢</span> بيانات الموظف</h2>
+      ${personBlockHtml(currentEmployee, 'emp', true)}
+
+      <h2 style="margin-top:22px;font-size:16px;">أفراد الأسرة الملحقين</h2>
+      <div id="depsContainer">${depsHtml}</div>
+
+      <div class="actions-row">
+        <button class="btn-primary" id="saveAllBtn">💾 حفظ كل التعديلات</button>
+        <button class="btn-gold" id="addDepBtn">+ إضافة فرد من الأسرة</button>
+      </div>
+      <div class="error-msg" id="saveError"></div>
+      <div id="depFormWrap"></div>
+    </div>
+  `;
+
+  document.getElementById('saveAllBtn').addEventListener('click', saveAllEdits);
+  document.getElementById('addDepBtn').addEventListener('click', showDependentForm);
+
+  wirePhotoInput('emp', currentEmployee);
+  wireHealthToggle('emp');
+  deps.forEach((d, idx)=> { wirePhotoInput('dep'+idx, d); wireHealthToggle('dep'+idx); });
+}
+
+function wireHealthToggle(uid){
+  const checkbox = document.getElementById(`f-${uid}-preExisting`);
+  const wrap = document.getElementById(`wrap-f-${uid}-preExistingDetails`);
+  if(!checkbox || !wrap) return;
+  checkbox.addEventListener('change', ()=>{
+    wrap.classList.toggle('show', checkbox.checked);
+  });
+}
+
+function personBlockHtml(person, uid, isEmployee){
+  const relTag = isEmployee ? 'الموظف الأساسي' : (person.relation || 'تابع');
+  const jobFieldHtml = isEmployee ? `
+    <div>
+      <label>الوظيفة</label>
+      <input type="text" id="f-${uid}-jobName" value="${escapeHtml(person.jobName)}">
+    </div>` : '';
+  const relFieldHtml = !isEmployee ? `
+    <div>
+      <label>الصلة</label>
+      <select id="f-${uid}-relation">
+        <option value="">اختر الصلة</option>
+        ${REL_OPTIONS.map(o=>`<option value="${o}" ${person.relation===o?'selected':''}>${o}</option>`).join('')}
+      </select>
+    </div>` : '';
+
+  return `
+    <div class="person-block ${isEmployee?'employee':''}" data-uid="${uid}">
+      <div class="person-head">
+        <span class="id-badge">كود: ${escapeHtml(person.codeStr)}</span>
+        <span class="rel-tag">${escapeHtml(relTag)}</span>
+      </div>
+      <div class="field-grid">
+        <div class="full">
+          <label>الاسم</label>
+          <input type="text" id="f-${uid}-name" value="${escapeHtml(person.name)}">
+        </div>
+        ${jobFieldHtml}
+        <div>
+          <label>تاريخ الميلاد</label>
+          <input type="date" id="f-${uid}-dob" value="${escapeHtml(person.dob)}">
+        </div>
+        <div>
+          <label>الرقم القومي</label>
+          <input type="text" id="f-${uid}-nationalId" maxlength="14" inputmode="numeric" value="${escapeHtml(person.nationalId)}">
+          <div class="field-err" id="err-f-${uid}-nationalId">يجب أن يتكون من 14 رقمًا</div>
+        </div>
+        <div>
+          <label>رقم الهاتف</label>
+          <input type="tel" id="f-${uid}-phone" maxlength="11" inputmode="numeric" value="${escapeHtml(person.phone)}">
+          <div class="field-err" id="err-f-${uid}-phone">رقم غير صحيح (11 رقم يبدأ بـ 01)</div>
+        </div>
+        <div>
+          <label>الخطة</label>
+          <select id="f-${uid}-plan" ${isEmployee ? 'disabled' : ''}>
+            <option value="">—</option>
+            ${PLAN_OPTIONS.map(o=>`<option value="${o}" ${String(person.plan)===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label>الفئة</label>
+          <select id="f-${uid}-category" ${isEmployee ? 'disabled' : ''}>
+            <option value="">—</option>
+            ${CAT_OPTIONS.map(o=>`<option value="${o}" ${person.category===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+        ${relFieldHtml}
+        <div class="full">
+          <label>الصورة الشخصية</label>
+          <div class="photo-row">
+            ${photoThumbHtml(person, 'thumb-'+uid)}
+            <label class="photo-input-label">اختيار / تغيير الصورة
+              <input type="file" accept="image/*" id="photo-${uid}">
+            </label>
+            ${person.photoUrl && !person.photo ? '<span class="photo-saved-tag">✓ محفوظة على درايف</span>' : ''}
+          </div>
+        </div>
+        <div class="full">
+          <label>البيانات الصحية</label>
+          <div class="health-box">
+            <div class="check-row">
+              <input type="checkbox" id="f-${uid}-pregnancy" ${person.pregnancy ? 'checked' : ''}>
+              <label for="f-${uid}-pregnancy">تفعيل تغطية الحمل</label>
+            </div>
+            <div class="check-row">
+              <input type="checkbox" id="f-${uid}-preExisting" ${person.preExisting ? 'checked' : ''}>
+              <label for="f-${uid}-preExisting">يوجد أمراض سابقة</label>
+            </div>
+            <div class="health-details ${person.preExisting ? 'show' : ''}" id="wrap-f-${uid}-preExistingDetails">
+              <textarea id="f-${uid}-preExistingDetails" placeholder="اذكر تفاصيل الأمراض السابقة">${escapeHtml(person.preExistingDetails)}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function wirePhotoInput(uid, person){
+  const input = document.getElementById('photo-'+uid);
+  if(!input) return;
+  input.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt)=>{
+      const ext = (file.type.split('/')[1] || 'jpg').replace('jpeg','jpg');
+      person.photo = {dataUrl: evt.target.result, ext};
+      const thumbEl = document.getElementById('thumb-'+uid);
+      const img = document.createElement('img');
+      img.className = 'photo-thumb';
+      img.id = 'thumb-'+uid;
+      img.src = evt.target.result;
+      thumbEl.replaceWith(img);
+      toast('تم اختيار الصورة — لازم تضغط "حفظ" لرفعها');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ================= Save edits (employee + existing dependents) =================
+function readPersonFields(uid, person){
+  const get = (f)=> document.getElementById(`f-${uid}-${f}`);
+  const name = get('name') ? get('name').value.trim() : person.name;
+  const dob = get('dob') ? get('dob').value : person.dob;
+  const nationalId = get('nationalId').value.trim();
+  const phone = get('phone').value.trim();
+  const plan = get('plan').value;
+  const category = get('category').value;
+  const jobName = get('jobName') ? get('jobName').value.trim() : person.jobName;
+  const relationEl = get('relation');
+  const relation = relationEl ? relationEl.value : person.relation;
+  const pregnancy = get('pregnancy') ? get('pregnancy').checked : !!person.pregnancy;
+  const preExisting = get('preExisting') ? get('preExisting').checked : !!person.preExisting;
+  const preExistingDetails = preExisting ? (get('preExistingDetails') ? get('preExistingDetails').value.trim() : person.preExistingDetails) : '';
+
+  let valid = true;
+  const nidErr = document.getElementById(`err-f-${uid}-nationalId`);
+  const nidOk = nationalId === '' || /^\d{14}$/.test(nationalId);
+  nidErr.classList.toggle('show', !nidOk);
+  if(!nidOk) valid = false;
+
+  const phoneErr = document.getElementById(`err-f-${uid}-phone`);
+  const phoneOk = phone === '' || /^01\d{9}$/.test(phone);
+  phoneErr.classList.toggle('show', !phoneOk);
+  if(!phoneOk) valid = false;
+
+  return {valid, values:{name, dob, nationalId, phone, plan, category, jobName, relation, pregnancy, preExisting, preExistingDetails}};
+}
+
+async function saveAllEdits(){
+  const saveError = document.getElementById('saveError');
+  saveError.classList.remove('show');
+  const saveBtn = document.getElementById('saveAllBtn');
+
+  let allValid = true;
+  const empResult = readPersonFields('emp', currentEmployee);
+  allValid = allValid && empResult.valid;
+
+  const deps = rawRows.filter(r => r.isDependent && r.company === currentCompany && r.parentCode === currentEmployee.codeStr)
+    .sort((a,b)=>{
+      const na = parseInt(a.codeStr.split('-')[1]) || 0;
+      const nb = parseInt(b.codeStr.split('-')[1]) || 0;
+      return na - nb;
+    });
+  const depResults = deps.map((d, idx)=> readPersonFields('dep'+idx, d));
+  allValid = allValid && depResults.every(r=>r.valid);
+
+  if(!allValid){
+    saveError.textContent = 'برجاء مراجعة الحقول التي تظهر بها أخطاء قبل الحفظ';
+    saveError.classList.add('show');
+    return;
+  }
+
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = '<span class="spinner"></span> جاري الحفظ...';
+  try{
+    Object.assign(currentEmployee, empResult.values);
+    await savePersonToSheet(currentEmployee);
+
+    for(let i=0;i<deps.length;i++){
+      Object.assign(deps[i], depResults[i].values);
+      await savePersonToSheet(deps[i]);
+    }
+
+    renderProfile();
+    toast('تم حفظ كل التعديلات في جوجل شيت');
+  }catch(err){
+    saveError.textContent = 'حدث خطأ أثناء الحفظ: ' + err.message;
+    saveError.classList.add('show');
+    toast('تعذّر حفظ التعديلات', true);
+  }finally{
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '💾 حفظ كل التعديلات';
+  }
+}
+
+async function savePersonToSheet(person){
+  const payload = {
+    action: 'updatePerson',
+    codeStr: person.codeStr,
+    company: person.company,
+    name: person.name,
+    jobName: person.jobName,
+    dob: person.dob,
+    nationalId: person.nationalId,
+    plan: person.plan,
+    category: person.category,
+    relation: person.relation,
+    phone: person.phone,
+    pregnancy: person.pregnancy ? 'نعم' : '',
+    preExisting: person.preExisting ? 'نعم' : '',
+    preExistingDetails: person.preExisting ? (person.preExistingDetails || '') : '',
+    existingPhotoUrl: person.photoUrl || ''
+  };
+  if(person.photo){
+    payload.photoBase64 = person.photo.dataUrl.split(',')[1];
+    payload.photoExt = person.photo.ext;
+  }
+  const res = await fetch(CONFIG.API_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if(data.error) throw new Error(data.error);
+  if(data.photoUrl){
+    person.photoUrl = data.photoUrl;
+    person.photo = null;
+  }
+  return data;
+}
+
+// ================= Add dependent =================
+function nextDependentCode(){
+  const siblings = rawRows.filter(r => r.isDependent && r.company === currentCompany && r.parentCode === currentEmployee.codeStr);
+  let maxN = 0;
+  siblings.forEach(d=>{
+    const n = parseInt(d.codeStr.split('-')[1], 10);
+    if(!isNaN(n) && n > maxN) maxN = n;
+  });
+  return `${currentEmployee.codeStr} - ${maxN + 1}`;
+}
+
+function showDependentForm(){
+  const nextCode = nextDependentCode();
+  document.getElementById('depFormWrap').innerHTML = `
+    <div class="card" style="background:var(--paper);box-shadow:none;">
+      <h2 style="font-size:15px;">تسجيل فرد جديد — الكود المتوقع: <span class="id-badge">${escapeHtml(nextCode)}</span></h2>
+      <p class="hint">الكود النهائي بيتحدد وقت الحفظ لتفادي تعارضه مع أي إضافة أخرى بتحصل في نفس الوقت.</p>
+      <div class="field-grid">
+        <div class="full">
+          <label>الاسم</label>
+          <input type="text" id="newDepName">
+          <div class="field-err" id="err-newDepName">هذا الحقل مطلوب</div>
+        </div>
+        <div>
+          <label>الصلة</label>
+          <select id="newDepRelation">
+            <option value="">اختر الصلة</option>
+            ${REL_OPTIONS.map(o=>`<option value="${o}">${o}</option>`).join('')}
+          </select>
+          <div class="field-err" id="err-newDepRelation">الرجاء اختيار الصلة</div>
+        </div>
+        <div>
+          <label>تاريخ الميلاد</label>
+          <input type="date" id="newDepDob">
+          <div class="field-err" id="err-newDepDob">الرجاء إدخال تاريخ الميلاد</div>
+        </div>
+        <div>
+          <label>الرقم القومي</label>
+          <input type="text" id="newDepNid" maxlength="14" inputmode="numeric">
+          <div class="field-err" id="err-newDepNid">يجب أن يتكون من 14 رقمًا</div>
+        </div>
+        <div>
+          <label>رقم الهاتف</label>
+          <input type="tel" id="newDepPhone" maxlength="11" inputmode="numeric">
+          <div class="field-err" id="err-newDepPhone">رقم غير صحيح (11 رقم يبدأ بـ 01)</div>
+        </div>
+        <div>
+          <label>الخطة</label>
+          <input type="text" value="2" disabled>
+        </div>
+        <div>
+          <label>الفئة</label>
+          <input type="text" value="B" disabled>
+        </div>
+        <div class="full">
+          <label>الصورة الشخصية</label>
+          <div class="photo-row">
+            <div class="photo-thumb placeholder" id="thumb-newDep">لا توجد صورة</div>
+            <label class="photo-input-label">اختيار صورة
+              <input type="file" accept="image/*" id="photo-newDep">
+            </label>
+          </div>
+          <div class="field-err" id="err-newDepPhoto">برجاء إرفاق صورة لهذا الفرد</div>
+        </div>
+        <div class="full">
+          <label>البيانات الصحية</label>
+          <div class="health-box">
+            <div class="check-row">
+              <input type="checkbox" id="newDepPregnancy">
+              <label for="newDepPregnancy">تفعيل تغطية الحمل</label>
+            </div>
+            <div class="check-row">
+              <input type="checkbox" id="newDepPreExisting">
+              <label for="newDepPreExisting">يوجد أمراض سابقة</label>
+            </div>
+            <div class="health-details" id="wrap-newDepPreExistingDetails">
+              <textarea id="newDepPreExistingDetails" placeholder="اذكر تفاصيل الأمراض السابقة"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="actions-row">
+        <button class="btn-primary" id="saveDepBtn">حفظ الفرد</button>
+        <button class="btn-ghost" id="cancelDepBtn">إلغاء</button>
+      </div>
+      <div class="error-msg" id="newDepError"></div>
+    </div>
+  `;
+
+  document.getElementById('newDepPreExisting').addEventListener('change', (e)=>{
+    document.getElementById('wrap-newDepPreExistingDetails').classList.toggle('show', e.target.checked);
+  });
+
+  let newPhoto = null;
+  document.getElementById('photo-newDep').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt)=>{
+      const ext = (file.type.split('/')[1] || 'jpg').replace('jpeg','jpg');
+      newPhoto = {dataUrl: evt.target.result, ext};
+      const thumbEl = document.getElementById('thumb-newDep');
+      const img = document.createElement('img');
+      img.className = 'photo-thumb';
+      img.id = 'thumb-newDep';
+      img.src = evt.target.result;
+      thumbEl.replaceWith(img);
+      document.getElementById('err-newDepPhoto').classList.remove('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('saveDepBtn').addEventListener('click', async ()=>{
+    const name = document.getElementById('newDepName').value.trim();
+    const relation = document.getElementById('newDepRelation').value;
+    const dob = document.getElementById('newDepDob').value;
+    const nid = document.getElementById('newDepNid').value.trim();
+    const phone = document.getElementById('newDepPhone').value.trim();
+    const plan = '2';
+    const category = 'B';
+    const pregnancy = document.getElementById('newDepPregnancy').checked;
+    const preExisting = document.getElementById('newDepPreExisting').checked;
+    const preExistingDetails = preExisting ? document.getElementById('newDepPreExistingDetails').value.trim() : '';
+
+    let valid = true;
+    const setErr = (id, cond)=>{
+      const el = document.getElementById('err-'+id);
+      el.classList.toggle('show', cond);
+      if(cond) valid = false;
+    };
+    setErr('newDepName', !name);
+    setErr('newDepRelation', !relation);
+    setErr('newDepDob', !dob);
+    setErr('newDepNid', !/^\d{14}$/.test(nid));
+    setErr('newDepPhone', !/^01\d{9}$/.test(phone));
+    setErr('newDepPhoto', !newPhoto);
+    if(!valid) return;
+
+    const saveDepBtn = document.getElementById('saveDepBtn');
+    const newDepError = document.getElementById('newDepError');
+    newDepError.classList.remove('show');
+    saveDepBtn.disabled = true;
+    saveDepBtn.innerHTML = '<span class="spinner"></span> جاري الحفظ...';
+
+    try{
+      const payload = {
+        action: 'addDependent',
+        parentCode: currentEmployee.codeStr,
+        company: currentCompany,
+        name, relation, dob, nationalId: nid, phone, plan, category,
+        pregnancy: pregnancy ? 'نعم' : '',
+        preExisting: preExisting ? 'نعم' : '',
+        preExistingDetails,
+        photoBase64: newPhoto.dataUrl.split(',')[1],
+        photoExt: newPhoto.ext
+      };
+      const res = await fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+
+      rawRows.push({
+        codeStr: data.codeStr, isDependent:true, parentCode: currentEmployee.codeStr,
+        name, jobName:'', dob, nationalId:nid, plan, category,
+        company: currentCompany, relation, phone, pregnancy, preExisting, preExistingDetails,
+        photoUrl: data.photoUrl || '', photo:null
+      });
+
+      document.getElementById('depFormWrap').innerHTML = '';
+      renderProfile();
+      toast(`تمت إضافة ${name} بكود ${data.codeStr} وحفظه في جوجل شيت`);
+    }catch(err){
+      newDepError.textContent = 'حدث خطأ أثناء الحفظ: ' + err.message;
+      newDepError.classList.add('show');
+      saveDepBtn.disabled = false;
+      saveDepBtn.innerHTML = 'حفظ الفرد';
+    }
+  });
+
+  document.getElementById('cancelDepBtn').addEventListener('click', ()=>{
+    document.getElementById('depFormWrap').innerHTML = '';
+  });
+}
+
+// ================= Init =================
+loadData();
+</script>
+</body>
+</html>
